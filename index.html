@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C.R.A.F.T. — Construction & Rapid Assembly Factory Terminal</title>
+  <meta name="description" content="The orbital foundry for the multi-planetary era. On-demand space manufacturing, starting with habitats.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <span class="nav-wordmark">C.R.A.F.T.</span>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-image" id="heroImage"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">C.R.A.F.T.</h1>
+      <p class="hero-subtitle">Construction &amp; Rapid Assembly Factory Terminal</p>
+      <p class="hero-tagline">The orbital foundry for the multi-planetary era.</p>
+    </div>
+  </section>
+
+  <!-- The Problem -->
+  <section class="section">
+    <h2 class="section-heading">Space has no supply chain</h2>
+    <p>Building a space station today is like shipping a skyscraper in a moving truck. One piece at a time, custom-built on Earth, tested for years, launched nearly empty. Adding pressurized volume takes 5+ years and tens of thousands of dollars per cubic meter.</p>
+    <p>As commercial space matures — private stations, research labs, agricultural modules, fuel depots, mining crew quarters — the current model of bespoke Earth-built modules cannot scale. Every new room requires a new mission.</p>
+    <p>Space needs what every industrial frontier eventually needs: local manufacturing capacity.</p>
+  </section>
+
+  <!-- The Solution -->
+  <section class="section">
+    <h2 class="section-heading">The orbital foundry</h2>
+    <p>We stockpile bulk feedstock in orbit and manufacture on-demand. C.R.A.F.T. 3D-prints structural shells, lines them with airtight membranes, and produces airlocks — all in-situ.</p>
+    <p>Habitats are the wedge. Once the foundry exists, it produces whatever the space economy needs next: storage silos, docking adapters, vehicle components, replacement parts. As asteroid mining and lunar industry come online, we become the industrial backbone.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">01</div>
+        <div class="step-label">Feedstock</div>
+        <div class="step-desc">Bulk raw material launched to orbit at lowest cost per kg.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <div class="step-label">Foundry</div>
+        <div class="step-desc">Autonomous 3D printing, membrane lining, and airlock assembly.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <div class="step-label">Structure</div>
+        <div class="step-desc">Finished modules delivered on-demand to any orbital destination.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Vision -->
+  <section class="section">
+    <h2 class="section-heading">From exploration to industry</h2>
+    <p>We give space its first supply chain. New stations get built in months instead of decades. Mining operations scale capacity without waiting on Earth. Space moves from an exploration era to an industrial era.</p>
+    <p>C.R.A.F.T. becomes the primary manufacturing base for LEO, the Moon, and Mars.</p>
+  </section>
+
+  <!-- First Use Case -->
+  <section class="section">
+    <h2 class="section-heading">Starting with habitats</h2>
+    <p>On-demand habitat modules sold to stations needing expansion, new commercial entrants building their first outpost, or mining operations scaling faster than Earth can deliver. Habitats are the wedge into a much larger platform.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-wordmark">C.R.A.F.T.</div>
+    <div class="footer-copy">&copy; 2026 C.R.A.F.T. All rights reserved.</div>
+  </footer>
+
+  <!-- Scroll Fade -->
+  <script>
+    (function () {
+      const heroImage = document.getElementById('heroImage');
+      const hero = document.querySelector('.hero');
+      let ticking = false;
+
+      function updateHeroOpacity() {
+        const rect = hero.getBoundingClientRect();
+        const heroHeight = hero.offsetHeight;
+        const scrolled = -rect.top;
+        const progress = Math.max(0, Math.min(1, scrolled / (heroHeight * 0.6)));
+        heroImage.style.opacity = 1 - progress;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          requestAnimationFrame(updateHeroOpacity);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      updateHeroOpacity();
+    })();
+  </script>
+
+</body>
+</html>

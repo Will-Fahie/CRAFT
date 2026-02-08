@@ -12,6 +12,8 @@
 </head>
 <body>
 
+  <canvas id="starfield"></canvas>
+
   <!-- Nav -->
   <nav class="nav">
     <span class="nav-wordmark">C.R.A.F.T.</span>
@@ -79,6 +81,112 @@
     <div class="footer-wordmark">C.R.A.F.T.</div>
     <div class="footer-copy">&copy; 2026 C.R.A.F.T. All rights reserved.</div>
   </footer>
+
+  <!-- Starfield -->
+  <script>
+    (function () {
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+
+      let width, height;
+      const STAR_COUNT = 150;
+      const stars = [];
+
+      // Mouse tracking (relative to viewport center, normalized -1 to 1)
+      let mouseX = 0;
+      let mouseY = 0;
+      let smoothMouseX = 0;
+      let smoothMouseY = 0;
+      const MOUSE_MULTIPLIER = 30;
+      const LERP_FACTOR = 0.05;
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+
+      function createStar() {
+        const depth = 0.2 + Math.random() * 0.8; // 0.2–1.0
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: (0.5 + Math.random() * 1.5) * depth,
+          baseOpacity: 0.3 + Math.random() * 0.7,
+          depth: depth,
+          drift: (0.1 + Math.random() * 0.2) * depth
+        };
+      }
+
+      function init() {
+        resize();
+        stars.length = 0;
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push(createStar());
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Subtle radial gradient (dark navy/indigo tint)
+        const gx = width * 0.5;
+        const gy = height * 0.4;
+        const gr = Math.max(width, height) * 0.6;
+        const gradient = ctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
+        gradient.addColorStop(0, 'rgba(20, 20, 60, 0.3)');
+        gradient.addColorStop(1, 'rgba(20, 20, 60, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        // Smooth mouse interpolation
+        smoothMouseX += (mouseX - smoothMouseX) * LERP_FACTOR;
+        smoothMouseY += (mouseY - smoothMouseY) * LERP_FACTOR;
+
+        // Draw stars
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+
+          // Ambient drift
+          s.x += s.drift;
+          if (s.x > width + 10) s.x = -10;
+
+          // Parallax offset
+          const px = s.x + smoothMouseX * s.depth * MOUSE_MULTIPLIER;
+          const py = s.y + smoothMouseY * s.depth * MOUSE_MULTIPLIER;
+
+          ctx.beginPath();
+          ctx.arc(px, py, s.radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 255, 255, ' + s.baseOpacity * s.depth + ')';
+          ctx.fill();
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      // Resize with debounce
+      let resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          resize();
+          // Reposition stars that are now out of bounds
+          for (let i = 0; i < stars.length; i++) {
+            if (stars[i].x > width) stars[i].x = Math.random() * width;
+            if (stars[i].y > height) stars[i].y = Math.random() * height;
+          }
+        }, 150);
+      });
+
+      // Mouse tracking
+      window.addEventListener('mousemove', function (e) {
+        mouseX = (e.clientX - width / 2) / (width / 2);
+        mouseY = (e.clientY - height / 2) / (height / 2);
+      });
+
+      init();
+      requestAnimationFrame(draw);
+    })();
+  </script>
 
   <!-- Scroll Fade -->
   <script>

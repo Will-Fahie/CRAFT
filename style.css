@@ -26,6 +26,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ── Starfield ── */
+#starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* ── Nav ── */
 .nav {
   position: fixed;
@@ -47,6 +55,7 @@ body {
 /* ── Hero ── */
 .hero {
   position: relative;
+  z-index: 1;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -104,6 +113,8 @@ body {
 
 /* ── Sections ── */
 .section {
+  position: relative;
+  z-index: 1;
   max-width: var(--content-width);
   margin: 0 auto;
   padding: 6rem 2rem;
@@ -161,6 +172,8 @@ body {
 
 /* ── Footer ── */
 .footer {
+  position: relative;
+  z-index: 1;
   border-top: 1px solid #1a1a1a;
   text-align: center;
   padding: 3rem 2rem;

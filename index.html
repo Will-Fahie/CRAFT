@@ -56,16 +56,14 @@
       const ctx = canvas.getContext('2d');
 
       let width, height;
-      const STAR_COUNT = 150;
+      const STAR_COUNT = 300;
       const stars = [];
 
-      // Mouse tracking (relative to viewport center, normalized -1 to 1)
-      let mouseX = 0;
-      let mouseY = 0;
-      let smoothMouseX = 0;
-      let smoothMouseY = 0;
-      const MOUSE_MULTIPLIER = 30;
-      const LERP_FACTOR = 0.05;
+      // Mouse tracking (absolute pixel position)
+      let mouseX = -1000;
+      let mouseY = -1000;
+      const REPULSION_RADIUS = 150;
+      const REPULSION_STRENGTH = 2;
 
       function resize() {
         width = canvas.width = window.innerWidth;
@@ -77,10 +75,12 @@
         return {
           x: Math.random() * width,
           y: Math.random() * height,
+          baseX: 0,
+          baseY: 0,
           radius: (0.5 + Math.random() * 1.5) * depth,
           baseOpacity: 0.3 + Math.random() * 0.7,
           depth: depth,
-          drift: (0.1 + Math.random() * 0.2) * depth
+          drift: (0.4 + Math.random() * 0.8) * depth
         };
       }
 
@@ -88,28 +88,42 @@
         resize();
         stars.length = 0;
         for (let i = 0; i < STAR_COUNT; i++) {
-          stars.push(createStar());
+          const star = createStar();
+          star.baseX = star.x;
+          star.baseY = star.y;
+          stars.push(star);
         }
       }
 
       function draw() {
         ctx.clearRect(0, 0, width, height);
 
-        // Smooth mouse interpolation
-        smoothMouseX += (mouseX - smoothMouseX) * LERP_FACTOR;
-        smoothMouseY += (mouseY - smoothMouseY) * LERP_FACTOR;
-
         // Draw stars
         for (let i = 0; i < stars.length; i++) {
           const s = stars[i];
 
           // Ambient drift
-          s.x += s.drift;
-          if (s.x > width + 10) s.x = -10;
+          s.baseX += s.drift;
+          if (s.baseX > width + 10) {
+            s.baseX = -10;
+          }
 
-          // Parallax offset
-          const px = s.x + smoothMouseX * s.depth * MOUSE_MULTIPLIER;
-          const py = s.y + smoothMouseY * s.depth * MOUSE_MULTIPLIER;
+          // Calculate distance from mouse
+          const dx = mouseX - s.baseX;
+          const dy = mouseY - s.baseY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          let px = s.baseX;
+          let py = s.baseY;
+
+          // Apply repulsion if within radius
+          if (distance < REPULSION_RADIUS && distance > 0) {
+            const force = (REPULSION_RADIUS - distance) / REPULSION_RADIUS;
+            const repelX = (dx / distance) * force * REPULSION_STRENGTH * -30;
+            const repelY = (dy / distance) * force * REPULSION_STRENGTH * -30;
+            px += repelX;
+            py += repelY;
+          }
 
           ctx.beginPath();
           ctx.arc(px, py, s.radius, 0, Math.PI * 2);
@@ -136,8 +150,8 @@
 
       // Mouse tracking
       window.addEventListener('mousemove', function (e) {
-        mouseX = (e.clientX - width / 2) / (width / 2);
-        mouseY = (e.clientY - height / 2) / (height / 2);
+        mouseX = e.clientX;
+        mouseY = e.clientY;
       });
 
       init();
@@ -203,42 +217,33 @@
         }).join(' ');
       });
 
-      // Track scroll direction
-      let lastScrollY = window.scrollY;
+      // Scroll-based word spotlight effect
       let ticking = false;
       
       function updateWordVisibility() {
-        const currentScrollY = window.scrollY;
-        const scrollingDown = currentScrollY > lastScrollY;
-        
         const words = document.querySelectorAll('.statement .word');
         const windowHeight = window.innerHeight;
         const centerY = windowHeight / 2;
-        const threshold = windowHeight * 0.15;
         
         words.forEach(function (word) {
           const rect = word.getBoundingClientRect();
           const wordCenter = rect.top + rect.height / 2;
-          const hasClass = word.classList.contains('fade-in');
           
-          // Word is in the spotlight - illuminate it
-          if (wordCenter >= centerY - threshold && wordCenter <= centerY + threshold) {
-            if (!hasClass) {
-              word.classList.add('fade-in');
-            }
+          // Calculate distance from center of viewport
+          const distance = Math.abs(wordCenter - centerY);
+          const threshold = windowHeight * 0.15; // Narrow spotlight area
+          
+          // Illuminate when in spotlight
+          if (distance < threshold) {
+            word.classList.add('fade-in');
           } 
-          // Word is above the spotlight (already passed through)
-          else if (wordCenter < centerY - threshold) {
-            if (!scrollingDown && hasClass) {
-              // Only when scrolling UP, remove the fade-in
-              word.classList.remove('fade-in');
-            }
-            // When scrolling down, absolutely do nothing - preserve the class
+          // Only de-illuminate if word is BELOW center (hasn't been illuminated yet when scrolling back up)
+          // Keep illuminated if word is ABOVE center (already passed through spotlight)
+          else if (wordCenter > centerY) {
+            word.classList.remove('fade-in');
           }
-          // Words below the spotlight - don't add or remove anything
         });
         
-        lastScrollY = currentScrollY;
         ticking = false;
       }
 

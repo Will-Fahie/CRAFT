@@ -103,11 +103,15 @@ body {
   display: inline-block;
   align-self: center;
   opacity: 0;
-  transition: opacity 1s ease;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
 }
 
 .hero-title.visible {
   opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 
@@ -127,13 +131,15 @@ body {
   margin-top: 0.5rem;
   text-transform: uppercase;
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(25px) scale(0.98);
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
 }
 
 .hero-tagline.visible {
   opacity: 0.7;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 /* ── Sections ── */
@@ -149,15 +155,69 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* ── Problem Statements ── */
+.section-problems {
+  padding: 6rem 3rem;
+  max-width: 900px;
+  gap: 5rem;
+  min-height: auto;
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+.problem-item {
+  opacity: 0;
+  transform: translateY(60px) scale(0.95);
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.problem-item.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.problem-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+}
+
+.problem-description {
+  font-size: clamp(0.95rem, 2vw, 1.125rem);
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  margin: 0;
 }
 
 .main-title {
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
   color: #fff;
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0 0 1.5rem 0;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.main-title.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .main-subtitle {
@@ -190,14 +250,19 @@ body {
 .statement .word {
   display: inline-block;
   color: var(--text-grey);
-  opacity: 0.3;
-  transition: color 0.3s ease, opacity 0.3s ease;
+  opacity: 0.2;
+  transform: translateY(10px);
+  transition: color 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 0 0.15em;
+  will-change: color, opacity, transform;
 }
 
 .statement .word.fade-in {
   color: #fff;
   opacity: 1;
+  transform: translateY(0);
 }
 
 /* ── Whitepaper Button ── */
@@ -218,27 +283,29 @@ body {
   cursor: pointer;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  transition: all 0.3s ease;
-  opacity: 0.6;
-  transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
   box-shadow: 0 4px 16px rgba(232, 87, 42, 0.2);
+  will-change: opacity, transform;
 }
 
 .whitepaper-button.fade-in {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .whitepaper-button:hover {
   background: #ff6b3d;
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(232, 87, 42, 0.5);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(232, 87, 42, 0.6);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
 .whitepaper-button:active {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(232, 87, 42, 0.4);
+  transform: translateY(-2px) scale(1);
+  box-shadow: 0 8px 24px rgba(232, 87, 42, 0.5);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
@@ -291,6 +358,20 @@ body {
     min-height: 50vh;
   }
 
+  .section-problems {
+    padding: 4rem 1.5rem;
+    gap: 3.5rem;
+  }
+
+  .problem-title {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .problem-description {
+    font-size: clamp(0.875rem, 3.5vw, 1rem);
+  }
+
   .section-whitepaper {
     padding: 0.25rem 1.5rem 1.5rem;
   }
@@ -301,7 +382,7 @@ body {
   }
 
   .main-title {
-    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
     margin-bottom: 1rem;
   }
 

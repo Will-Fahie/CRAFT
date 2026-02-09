@@ -31,9 +31,25 @@
     </div>
   </section>
 
+  <!-- Problem Statements -->
+  <section class="section section-problems">
+    <div class="problem-item">
+      <h2 class="problem-title">80% OF A MODERN SPACE STATION IS DEAD WEIGHT.</h2>
+      <p class="problem-description">Current modules are over-engineered to survive the 8-minute vibration of launch—rendering them inefficient for the decades they spend in orbit.</p>
+    </div>
+    <div class="problem-item">
+      <h2 class="problem-title">WE ARE CURRENTLY PAYING TO SHIP AIR.</h2>
+      <p class="problem-description">A Starship fairing can hold 150 tons of mass, but pre-built habitats are so voluminous they "max out" the rocket at only 30 tons. We are wasting 70% of the world's most powerful launch capacity.</p>
+    </div>
+    <div class="problem-item">
+      <h2 class="problem-title">THE INFLECTION TO A $1.8 TRILLION ECONOMY.</h2>
+      <p class="problem-description">Space is no longer a destination; it's a production center. C.R.A.F.T. is the industrial backbone required to scale LEO real estate and deep-space logistics to meet the demands of a trillion-dollar orbital market.</p>
+    </div>
+  </section>
+
   <!-- Main Content -->
   <section class="section">
-    <h1 class="main-title">Construction & Rapid Assembly Factory Terminal</h1>
+    <h1 class="main-title">Construction & Rapid Assembly Factory Terminal: C.R.A.F.T.</h1>
     <p class="statement statement-primary">We manufacture spacecraft parts and habitat infrastructure directly in LEO.</p>
     <p class="statement statement-secondary">By converting high-density raw feedstock into large-scale structures in-situ, we bypass rocket size constraints to build the industrial base for Earth orbit, the Moon, and Mars.</p>
   </section>
@@ -194,15 +210,107 @@
       var title = document.querySelector('.hero-title');
       var tagline = document.querySelector('.hero-tagline');
 
-      // Fade in title after brief delay
+      // Smooth entrance with Apple-like timing
       setTimeout(function () {
         title.classList.add('visible');
-      }, 300);
+      }, 400);
 
-      // Slide-up tagline right after fade-in completes
+      // Tagline follows with elegant delay
       setTimeout(function () {
         tagline.classList.add('visible');
-      }, 800);
+      }, 1000);
+    })();
+  </script>
+
+  <!-- Problem Statements Animation -->
+  <script>
+    (function () {
+      const problemItems = document.querySelectorAll('.problem-item');
+      
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            const index = Array.from(problemItems).indexOf(entry.target);
+            // Stagger with longer delays for Apple-like feel
+            setTimeout(function () {
+              entry.target.classList.add('visible');
+            }, index * 300);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '-50px',
+        threshold: 0.15
+      });
+
+      problemItems.forEach(function (item) {
+        observer.observe(item);
+      });
+    })();
+  </script>
+
+  <!-- Main Title Animation -->
+  <script>
+    (function () {
+      const mainTitle = document.querySelector('.main-title');
+      
+      if (mainTitle) {
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          root: null,
+          rootMargin: '-80px',
+          threshold: 0.1
+        });
+        
+        observer.observe(mainTitle);
+      }
+    })();
+  </script>
+
+  <!-- Smooth Parallax Scrolling -->
+  <script>
+    (function () {
+      let ticking = false;
+      const problemSection = document.querySelector('.section-problems');
+      const mainSection = document.querySelectorAll('.section')[1];
+      
+      function updateParallax() {
+        const scrolled = window.pageYOffset;
+        
+        // Subtle parallax on problem statements
+        if (problemSection) {
+          const rect = problemSection.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const offset = (window.innerHeight - rect.top) * 0.1;
+            problemSection.style.transform = 'translateY(' + offset + 'px)';
+          }
+        }
+        
+        // Very subtle parallax on main content
+        if (mainSection) {
+          const rect = mainSection.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const offset = (window.innerHeight - rect.top) * 0.05;
+            mainSection.style.transform = 'translateY(' + offset + 'px)';
+          }
+        }
+        
+        ticking = false;
+      }
+      
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          requestAnimationFrame(updateParallax);
+          ticking = true;
+        }
+      }, { passive: true });
     })();
   </script>
 
@@ -219,13 +327,13 @@
         }).join(' ');
       });
 
-      // Scroll-based word spotlight effect
+      // Scroll-based word spotlight effect with enhanced smoothness
       let ticking = false;
       
       function updateWordVisibility() {
         const words = document.querySelectorAll('.statement .word');
         const windowHeight = window.innerHeight;
-        const centerY = windowHeight / 2;
+        const centerY = windowHeight * 0.55; // Slightly lower sweet spot
         
         words.forEach(function (word) {
           const rect = word.getBoundingClientRect();
@@ -233,15 +341,14 @@
           
           // Calculate distance from center of viewport
           const distance = Math.abs(wordCenter - centerY);
-          const threshold = windowHeight * 0.15; // Narrow spotlight area
+          const threshold = windowHeight * 0.2; // Slightly wider spotlight
           
-          // Illuminate when in spotlight
+          // Illuminate when in spotlight with smooth gradient
           if (distance < threshold) {
             word.classList.add('fade-in');
           } 
-          // Only de-illuminate if word is BELOW center (hasn't been illuminated yet when scrolling back up)
-          // Keep illuminated if word is ABOVE center (already passed through spotlight)
-          else if (wordCenter > centerY) {
+          // Only de-illuminate if word is BELOW center
+          else if (wordCenter > centerY + threshold) {
             word.classList.remove('fade-in');
           }
         });

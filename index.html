@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="C.R.A.F.T..png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;600;700;900&display=swap&text-rendering=optimizeLegibility" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,6 +19,7 @@
   <!-- Nav -->
   <nav class="nav">
     <span class="nav-wordmark">C.R.A.F.T.</span>
+    <button class="nav-button" id="learnMoreBtn">Learn More</button>
   </nav>
 
   <!-- Hero -->
@@ -34,7 +35,7 @@
   <!-- Problem Statements -->
   <section class="section section-problems">
     <div class="problem-item">
-      <h2 class="problem-title">80% OF A MODERN SPACE STATION IS DEAD WEIGHT.</h2>
+      <h2 class="problem-title"><span class="highlight-number">80%</span> OF A MODERN SPACE STATION IS DEAD WEIGHT.</h2>
       <p class="problem-description">Current modules are over-engineered to survive the 8-minute vibration of launch—rendering them inefficient for the decades they spend in orbit.</p>
     </div>
     <div class="problem-item">
@@ -42,13 +43,14 @@
       <p class="problem-description">A Starship fairing can hold 150 tons of mass, but pre-built habitats are so voluminous they "max out" the rocket at only 30 tons. We are wasting 70% of the world's most powerful launch capacity.</p>
     </div>
     <div class="problem-item">
-      <h2 class="problem-title">THE INFLECTION TO A $1.8 TRILLION ECONOMY.</h2>
+      <h2 class="problem-title">THE INFLECTION TO A <span class="highlight-number">$1.8 TRILLION</span> ECONOMY.</h2>
       <p class="problem-description">Space is no longer a destination; it's a production center. C.R.A.F.T. is the industrial backbone required to scale LEO real estate and deep-space logistics to meet the demands of a trillion-dollar orbital market.</p>
     </div>
   </section>
 
   <!-- Main Content -->
   <section class="section">
+    <p class="eyebrow">OUR SOLUTION</p>
     <h1 class="main-title">Construction & Rapid Assembly Factory Terminal: C.R.A.F.T.</h1>
     <p class="statement statement-primary">We manufacture spacecraft parts and habitat infrastructure directly in LEO.</p>
     <p class="statement statement-secondary">By converting high-density raw feedstock into large-scale structures in-situ, we bypass rocket size constraints to build the industrial base for Earth orbit, the Moon, and Mars.</p>
@@ -66,6 +68,23 @@
       <a href="https://www.linkedin.com/in/harper-dammann-smith/" target="_blank" rel="noopener">Harper Dammann Smith</a>
     </div>
   </footer>
+
+  <!-- Learn More Button Scroll -->
+  <script>
+    (function () {
+      const learnMoreBtn = document.getElementById('learnMoreBtn');
+      const problemSection = document.querySelector('.section-problems');
+      
+      if (learnMoreBtn && problemSection) {
+        learnMoreBtn.addEventListener('click', function () {
+          problemSection.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        });
+      }
+    })();
+  </script>
 
   <!-- Starfield -->
   <script>
@@ -210,15 +229,36 @@
       var title = document.querySelector('.hero-title');
       var tagline = document.querySelector('.hero-tagline');
 
-      // Smooth entrance with Apple-like timing
+      // Character-by-character animation
+      var text = title.textContent;
+      title.innerHTML = '';
+      
+      for (var i = 0; i < text.length; i++) {
+        var span = document.createElement('span');
+        span.textContent = text[i];
+        span.style.opacity = '0';
+        span.style.display = 'inline-block';
+        span.style.transform = 'translateY(20px) rotate(' + (Math.random() * 4 - 2) + 'deg)';
+        span.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        title.appendChild(span);
+      }
+
+      // Animate characters with stagger
       setTimeout(function () {
         title.classList.add('visible');
+        var chars = title.querySelectorAll('span');
+        chars.forEach(function (char, index) {
+          setTimeout(function () {
+            char.style.opacity = '1';
+            char.style.transform = 'translateY(0) rotate(0deg)';
+          }, index * 40);
+        });
       }, 400);
 
       // Tagline follows with elegant delay
       setTimeout(function () {
         tagline.classList.add('visible');
-      }, 1000);
+      }, 400 + (text.length * 40) + 300);
     })();
   </script>
 
@@ -226,15 +266,37 @@
   <script>
     (function () {
       const problemItems = document.querySelectorAll('.problem-item');
+      const eyebrows = document.querySelectorAll('.eyebrow');
       
+      // Animate eyebrows
+      const eyebrowObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            eyebrowObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '-50px',
+        threshold: 0.5
+      });
+      
+      eyebrows.forEach(function (eyebrow) {
+        eyebrowObserver.observe(eyebrow);
+      });
+      
+      // Animate problem items
       const observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             const index = Array.from(problemItems).indexOf(entry.target);
+            const randomRotation = Math.random() * 4 - 2; // -2 to 2 degrees
             // Stagger with longer delays for Apple-like feel
             setTimeout(function () {
+              entry.target.style.transform = 'translateY(0) scale(1) rotateX(' + randomRotation + 'deg)';
               entry.target.classList.add('visible');
-            }, index * 300);
+            }, index * 400);
             observer.unobserve(entry.target);
           }
         });
@@ -381,6 +443,18 @@
           threshold: 0.5
         });
         buttonObserver.observe(button);
+        
+        // Magnetic button effect
+        button.addEventListener('mousemove', function (e) {
+          const rect = button.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          button.style.transform = 'translate(' + (x * 0.15) + 'px, ' + (y * 0.15) + 'px) scale(1.02)';
+        });
+        
+        button.addEventListener('mouseleave', function () {
+          button.style.transform = 'translate(0, 0) scale(1)';
+        });
       }
     })();
   </script>

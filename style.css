@@ -368,7 +368,7 @@ body {
 /* ── Whitepaper Button ── */
 .section-whitepaper {
   min-height: auto;
-  padding: 0.25rem 0.5rem 1.5rem;
+  padding: 0 0.5rem 2rem;
 }
 
 .whitepaper-button {
@@ -460,7 +460,7 @@ body {
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .section {
-    padding: 6rem 1.5rem;
+    padding: 6rem 1.5rem 1.5rem;
     min-height: 50vh;
   }
 
@@ -492,7 +492,7 @@ body {
   }
 
   .section-whitepaper {
-    padding: 0.25rem 1.5rem 1rem;
+    padding: 0 1.5rem 1rem;
   }
   
   .whitepaper-button {

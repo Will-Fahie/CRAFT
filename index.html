@@ -268,7 +268,8 @@
       const problemItems = document.querySelectorAll('.problem-item');
       const eyebrows = document.querySelectorAll('.eyebrow');
       
-      // Animate eyebrows
+      // Animate eyebrows (only problem section eyebrows, not "OUR SOLUTION")
+      const problemEyebrows = document.querySelectorAll('.section-problems .eyebrow');
       const eyebrowObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
@@ -282,7 +283,7 @@
         threshold: 0.5
       });
       
-      eyebrows.forEach(function (eyebrow) {
+      problemEyebrows.forEach(function (eyebrow) {
         eyebrowObserver.observe(eyebrow);
       });
       
@@ -316,12 +317,17 @@
   <script>
     (function () {
       const mainTitle = document.querySelector('.main-title');
+      const ourSolutionEyebrow = document.querySelector('.section .eyebrow');
       
       if (mainTitle) {
         const observer = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) {
               entry.target.classList.add('visible');
+              // Also animate the eyebrow at the same time
+              if (ourSolutionEyebrow) {
+                ourSolutionEyebrow.classList.add('visible');
+              }
               observer.unobserve(entry.target);
             }
           });

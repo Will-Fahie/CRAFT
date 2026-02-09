@@ -391,6 +391,8 @@ body {
   opacity: 0;
   box-shadow: 0 4px 16px rgba(232, 87, 42, 0.2);
   will-change: opacity, transform;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .whitepaper-button.fade-in {

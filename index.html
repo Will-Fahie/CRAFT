@@ -29,56 +29,24 @@
     </div>
   </section>
 
-  <!-- The Problem -->
+  <!-- Main Content -->
   <section class="section">
-    <h2 class="section-heading">Space has no supply chain</h2>
-    <p>Building a space station today is like shipping a skyscraper in a moving truck. One piece at a time, custom-built on Earth, tested for years, launched nearly empty. Adding pressurized volume takes 5+ years and tens of thousands of dollars per cubic meter.</p>
-    <p>As commercial space matures — private stations, research labs, agricultural modules, fuel depots, mining crew quarters — the current model of bespoke Earth-built modules cannot scale. Every new room requires a new mission.</p>
-    <p>Space needs what every industrial frontier eventually needs: local manufacturing capacity.</p>
+    <h1 class="main-title">Construction & Rapid Assembly Factory Terminal</h1>
+    <p class="statement statement-primary">We manufacture spacecraft parts and habitat infrastructure directly in LEO.</p>
+    <p class="statement statement-secondary">By converting high-density raw feedstock into large-scale structures in-situ, we bypass rocket size constraints to build the industrial base for Earth orbit, the Moon, and Mars.</p>
   </section>
 
-  <!-- The Solution -->
-  <section class="section">
-    <h2 class="section-heading">The orbital foundry</h2>
-    <p>C.R.A.F.T. — the Construction &amp; Rapid Assembly Factory Terminal — stockpiles bulk feedstock in orbit and manufactures on-demand. It 3D-prints structural shells, lines them with airtight membranes, and produces airlocks — all in-situ.</p>
-    <p>Habitats are the wedge. Once the foundry exists, it produces whatever the space economy needs next: storage silos, docking adapters, vehicle components, replacement parts. As asteroid mining and lunar industry come online, we become the industrial backbone.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">01</div>
-        <div class="step-label">Feedstock</div>
-        <div class="step-desc">Bulk raw material launched to orbit at lowest cost per kg.</div>
-      </div>
-      <div class="step">
-        <div class="step-number">02</div>
-        <div class="step-label">Foundry</div>
-        <div class="step-desc">Autonomous 3D printing, membrane lining, and airlock assembly.</div>
-      </div>
-      <div class="step">
-        <div class="step-number">03</div>
-        <div class="step-label">Structure</div>
-        <div class="step-desc">Finished modules delivered on-demand to any orbital destination.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- The Vision -->
-  <section class="section">
-    <h2 class="section-heading">From exploration to industry</h2>
-    <p>We give space its first supply chain. New stations get built in months instead of decades. Mining operations scale capacity without waiting on Earth. Space moves from an exploration era to an industrial era.</p>
-    <p>C.R.A.F.T. becomes the primary manufacturing base for LEO, the Moon, and Mars.</p>
-  </section>
-
-  <!-- First Use Case -->
-  <section class="section">
-    <h2 class="section-heading">Starting with habitats</h2>
-    <p>On-demand habitat modules sold to stations needing expansion, new commercial entrants building their first outpost, or mining operations scaling faster than Earth can deliver. Habitats are the wedge into a much larger platform.</p>
+  <!-- Whitepaper -->
+  <section class="section section-whitepaper">
+    <button class="whitepaper-button">Read the Whitepaper</button>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-wordmark">C.R.A.F.T.</div>
-    <div class="footer-copy">&copy; 2026 C.R.A.F.T. All rights reserved.</div>
+    <div class="footer-founders">
+      <a href="https://www.linkedin.com/in/williamfahie/" target="_blank" rel="noopener">William Fahie</a>
+      <a href="https://www.linkedin.com/in/harper-dammann-smith/" target="_blank" rel="noopener">Harper Dammann Smith</a>
+    </div>
   </footer>
 
   <!-- Starfield -->
@@ -188,7 +156,7 @@
         const rect = hero.getBoundingClientRect();
         const heroHeight = hero.offsetHeight;
         const scrolled = -rect.top;
-        const progress = Math.max(0, Math.min(1, scrolled / (heroHeight * 0.6)));
+        const progress = Math.max(0, Math.min(1, scrolled / (heroHeight * 0.9)));
         heroImage.style.opacity = 1 - progress;
         ticking = false;
       }
@@ -201,6 +169,105 @@
       }, { passive: true });
 
       updateHeroOpacity();
+    })();
+  </script>
+
+  <!-- Hero Entrance -->
+  <script>
+    (function () {
+      var title = document.querySelector('.hero-title');
+      var tagline = document.querySelector('.hero-tagline');
+
+      // Fade in title after brief delay
+      setTimeout(function () {
+        title.classList.add('visible');
+      }, 300);
+
+      // Slide-up tagline right after fade-in completes
+      setTimeout(function () {
+        tagline.classList.add('visible');
+      }, 800);
+    })();
+  </script>
+
+  <!-- Word-by-Word Scroll Spotlight -->
+  <script>
+    (function () {
+      // Wrap each word in a span
+      const statements = document.querySelectorAll('.statement');
+      statements.forEach(function (statement) {
+        const text = statement.textContent;
+        const words = text.split(' ');
+        statement.innerHTML = words.map(function (word) {
+          return '<span class="word">' + word + '</span>';
+        }).join(' ');
+      });
+
+      // Track scroll direction
+      let lastScrollY = window.scrollY;
+      let ticking = false;
+      
+      function updateWordVisibility() {
+        const currentScrollY = window.scrollY;
+        const scrollingDown = currentScrollY > lastScrollY;
+        
+        const words = document.querySelectorAll('.statement .word');
+        const windowHeight = window.innerHeight;
+        const centerY = windowHeight / 2;
+        const threshold = windowHeight * 0.15;
+        
+        words.forEach(function (word) {
+          const rect = word.getBoundingClientRect();
+          const wordCenter = rect.top + rect.height / 2;
+          const hasClass = word.classList.contains('fade-in');
+          
+          // Word is in the spotlight - illuminate it
+          if (wordCenter >= centerY - threshold && wordCenter <= centerY + threshold) {
+            if (!hasClass) {
+              word.classList.add('fade-in');
+            }
+          } 
+          // Word is above the spotlight (already passed through)
+          else if (wordCenter < centerY - threshold) {
+            if (!scrollingDown && hasClass) {
+              // Only when scrolling UP, remove the fade-in
+              word.classList.remove('fade-in');
+            }
+            // When scrolling down, absolutely do nothing - preserve the class
+          }
+          // Words below the spotlight - don't add or remove anything
+        });
+        
+        lastScrollY = currentScrollY;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          requestAnimationFrame(updateWordVisibility);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // Initial check
+      updateWordVisibility();
+
+      // Observe button separately
+      const button = document.querySelector('.whitepaper-button');
+      if (button) {
+        const buttonObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+              entry.target.classList.add('fade-in');
+            }
+          });
+        }, {
+          root: null,
+          rootMargin: '-100px 0px -100px 0px',
+          threshold: 0.5
+        });
+        buttonObserver.observe(button);
+      }
     })();
   </script>
 
